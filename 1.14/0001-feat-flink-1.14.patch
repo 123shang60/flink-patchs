@@ -1,0 +1,28 @@
+From 29997797b19d29b60abce9cf4f709611ad8b3bc7 Mon Sep 17 00:00:00 2001
+From: 123shang60 <616761475@qq.com>
+Date: Sun, 22 Jan 2023 21:12:58 +0800
+Subject: [PATCH] =?UTF-8?q?feat=20:=20flink=201.14=20=E5=A2=9E=E5=BC=BA?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ flink-shaded-netty-4/pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/flink-shaded-netty-4/pom.xml b/flink-shaded-netty-4/pom.xml
+index 5babbe4..0fa8165 100644
+--- a/flink-shaded-netty-4/pom.xml
++++ b/flink-shaded-netty-4/pom.xml
+@@ -34,7 +34,7 @@ under the License.
+     <version>${netty.version}-14.0</version>
+ 
+     <properties>
+-        <netty.version>4.1.65.Final</netty.version>
++        <netty.version>4.1.66.Final</netty.version>
+     </properties>
+ 
+     <dependencies>
+-- 
+2.39.1
+
