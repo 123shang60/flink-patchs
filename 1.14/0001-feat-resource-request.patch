@@ -1,7 +1,7 @@
-From 588bb957e961a503d734002ca24cc7574672666b Mon Sep 17 00:00:00 2001
+From 992eb93baa713693aa92d2bb56ac8e77445a8ed3 Mon Sep 17 00:00:00 2001
 From: 123shang60 <616761475@qq.com>
-Date: Mon, 23 Jan 2023 20:18:38 +0800
-Subject: [PATCH] feat : resource request
+Date: Mon, 23 Jan 2023 22:01:17 +0800
+Subject: [PATCH] patchs
 
 ---
  .../flink-connector-cassandra/pom.xml         |  4 +--
@@ -17,13 +17,13 @@ Subject: [PATCH] feat : resource request
  .../KubernetesConfigOptions.java              | 29 +++++++++++++++++++
  .../decorators/InitJobManagerDecorator.java   |  2 ++
  .../decorators/InitTaskManagerDecorator.java  |  2 ++
- .../KubernetesJobManagerParameters.java       | 13 +++++++++
- .../KubernetesTaskManagerParameters.java      | 13 +++++++++
+ .../KubernetesJobManagerParameters.java       | 11 +++++++
+ .../KubernetesTaskManagerParameters.java      | 11 +++++++
  .../kubernetes/utils/KubernetesUtils.java     | 11 +++++--
  flink-python/pom.xml                          |  4 +--
  .../src/main/resources/META-INF/NOTICE        |  4 +--
  pom.xml                                       |  2 +-
- 19 files changed, 101 insertions(+), 37 deletions(-)
+ 19 files changed, 97 insertions(+), 37 deletions(-)
 
 diff --git a/flink-connectors/flink-connector-cassandra/pom.xml b/flink-connectors/flink-connector-cassandra/pom.xml
 index 19bf8ed1..b246fc4c 100644
@@ -241,7 +241,7 @@ index 1e194849..ebdf3a62 100644
   - org.apache.commons:commons-crypto:1.0.0
   - org.apache.commons:commons-lang3:3.3.2
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
-index 62504356..c28d0d75 100644
+index 62504356..1df8122d 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
 @@ -23,6 +23,7 @@ import org.apache.flink.annotation.docs.Documentation;
@@ -259,7 +259,7 @@ index 62504356..c28d0d75 100644
 +    public static final ConfigOption<Double> JOB_MANAGER_REQUEST_CPU =
 +            key("kubernetes.requests.jobmanager.cpu")
 +                    .doubleType()
-+                    .defaultValue(1.0)
++                    .defaultValue(-1.0)
 +                    .withDescription("The number of cpu requested by job manager");
 +
 +    public static final ConfigOption<Double> TASK_MANAGER_REQUEST_CPU =
@@ -273,13 +273,13 @@ index 62504356..c28d0d75 100644
 +    public static final ConfigOption<MemorySize> JOB_MANAGER_REQUEST_MEM =
 +            key("kubernetes.requests.jobmanager.mem")
 +                    .memoryType()
-+                    .defaultValue(new MemorySize(100 * 1024))
++                    .defaultValue(new MemorySize(100 * 1024 * 1024))
 +                    .withDescription("The number of cpu requested by job manager");
 +
 +    public static final ConfigOption<MemorySize> TASK_MANAGER_REQUEST_MEM =
 +            key("kubernetes.requests.taskmanager.mem")
 +                    .memoryType()
-+                    .defaultValue(new MemorySize(100 * 1024))
++                    .defaultValue(new MemorySize(100 * 1024 * 1024))
 +                    .withDescription(
 +                            "The number of cpu requested by task manager. By default, the cpu is set "
 +                                    + "to the number of slots per TaskManager");
@@ -314,17 +314,15 @@ index 69668de8..5db84476 100644
                          kubernetesTaskManagerParameters.getTaskManagerCPU(),
                          kubernetesTaskManagerParameters.getTaskManagerExternalResources(),
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
-index 67079734..c4d1a9b4 100644
+index 67079734..3c738d8b 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
-@@ -125,6 +125,19 @@ public class KubernetesJobManagerParameters extends AbstractKubernetesParameters
+@@ -125,6 +125,17 @@ public class KubernetesJobManagerParameters extends AbstractKubernetesParameters
          return flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_CPU);
      }
  
 +    public double getJobManagerRequestCPU() {
-+        double dis = 1e-6;
-+        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU) - 1.0d)
-+                < dis) {
++        if (flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU) < 0) {
 +            return this.getJobManagerCPU();
 +        }
 +        return flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU);
@@ -338,10 +336,10 @@ index 67079734..c4d1a9b4 100644
          return flinkConfig.getInteger(RestOptions.PORT);
      }
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
-index 247860e6..9255988e 100644
+index 247860e6..6ddaeb2b 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
-@@ -127,6 +127,19 @@ public class KubernetesTaskManagerParameters extends AbstractKubernetesParameter
+@@ -127,6 +127,17 @@ public class KubernetesTaskManagerParameters extends AbstractKubernetesParameter
                  .doubleValue();
      }
  
@@ -350,9 +348,7 @@ index 247860e6..9255988e 100644
 +    }
 +
 +    public double getTaskManagerRequestCPU() {
-+        double dis = 1e-6;
-+        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU) - 1.0d)
-+                < dis) {
++        if (flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU) < 0) {
 +            return this.getTaskManagerCPU();
 +        }
 +        return flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU);
