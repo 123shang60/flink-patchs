@@ -1,10 +1,7 @@
-From 8c92d561d88db491fde8ae359ee877b14f74de9c Mon Sep 17 00:00:00 2001
+From 588bb957e961a503d734002ca24cc7574672666b Mon Sep 17 00:00:00 2001
 From: 123shang60 <616761475@qq.com>
-Date: Sun, 22 Jan 2023 21:06:55 +0800
-Subject: [PATCH] =?UTF-8?q?feat=20:=20=E5=A2=9E=E5=8A=A0=E8=83=BD=E5=8A=9B?=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Mon, 23 Jan 2023 20:18:38 +0800
+Subject: [PATCH] feat : resource request
 
 ---
  .../flink-connector-cassandra/pom.xml         |  4 +--
@@ -15,11 +12,8 @@ Content-Transfer-Encoding: 8bit
  .../flink-connector-hbase-2.2/pom.xml         |  2 +-
  .../flink-connector-hbase-base/pom.xml        |  2 +-
  flink-connectors/flink-connector-hive/pom.xml |  4 +--
- .../src/main/resources/META-INF/NOTICE        | 20 ++++++-------
  .../src/main/resources/META-INF/NOTICE        |  2 +-
  .../src/main/resources/META-INF/NOTICE        |  2 +-
- .../flink-glue-schema-registry-test/pom.xml   |  2 +-
- .../flink-avro-glue-schema-registry/pom.xml   |  2 +-
  .../KubernetesConfigOptions.java              | 29 +++++++++++++++++++
  .../decorators/InitJobManagerDecorator.java   |  2 ++
  .../decorators/InitTaskManagerDecorator.java  |  2 ++
@@ -29,10 +23,10 @@ Content-Transfer-Encoding: 8bit
  flink-python/pom.xml                          |  4 +--
  .../src/main/resources/META-INF/NOTICE        |  4 +--
  pom.xml                                       |  2 +-
- 22 files changed, 113 insertions(+), 49 deletions(-)
+ 19 files changed, 101 insertions(+), 37 deletions(-)
 
 diff --git a/flink-connectors/flink-connector-cassandra/pom.xml b/flink-connectors/flink-connector-cassandra/pom.xml
-index f42ba40dacd..ef0db423059 100644
+index 19bf8ed1..b246fc4c 100644
 --- a/flink-connectors/flink-connector-cassandra/pom.xml
 +++ b/flink-connectors/flink-connector-cassandra/pom.xml
 @@ -133,7 +133,7 @@ under the License.
@@ -54,7 +48,7 @@ index f42ba40dacd..ef0db423059 100644
  		</dependency>
  	</dependencies>
 diff --git a/flink-connectors/flink-connector-cassandra/src/main/resources/META-INF/NOTICE b/flink-connectors/flink-connector-cassandra/src/main/resources/META-INF/NOTICE
-index fec1e7da36e..2c47d5aa3f3 100644
+index fec1e7da..2c47d5aa 100644
 --- a/flink-connectors/flink-connector-cassandra/src/main/resources/META-INF/NOTICE
 +++ b/flink-connectors/flink-connector-cassandra/src/main/resources/META-INF/NOTICE
 @@ -9,9 +9,9 @@ This project bundles the following dependencies under the Apache Software Licens
@@ -74,7 +68,7 @@ index fec1e7da36e..2c47d5aa3f3 100644
 +- io.netty:netty-resolver:4.1.66.Final
 +- io.netty:netty-transport:4.1.66.Final
 diff --git a/flink-connectors/flink-connector-elasticsearch5/pom.xml b/flink-connectors/flink-connector-elasticsearch5/pom.xml
-index 083d9778aa5..de4590bf5cf 100644
+index 209e0678..22b35132 100644
 --- a/flink-connectors/flink-connector-elasticsearch5/pom.xml
 +++ b/flink-connectors/flink-connector-elasticsearch5/pom.xml
 @@ -79,49 +79,49 @@ under the License.
@@ -135,7 +129,7 @@ index 083d9778aa5..de4590bf5cf 100644
  
  		<!-- Tests -->
 diff --git a/flink-connectors/flink-connector-elasticsearch5/src/main/resources/META-INF/NOTICE b/flink-connectors/flink-connector-elasticsearch5/src/main/resources/META-INF/NOTICE
-index 2b51d2c5cf0..9f274c56e61 100644
+index cfbcff7c..791f0030 100644
 --- a/flink-connectors/flink-connector-elasticsearch5/src/main/resources/META-INF/NOTICE
 +++ b/flink-connectors/flink-connector-elasticsearch5/src/main/resources/META-INF/NOTICE
 @@ -18,13 +18,13 @@ This project bundles the following dependencies under the Apache Software Licens
@@ -160,7 +154,7 @@ index 2b51d2c5cf0..9f274c56e61 100644
  - net.java.dev.jna:jna:4.2.2
  - org.apache.httpcomponents:httpasyncclient:4.1.2
 diff --git a/flink-connectors/flink-connector-hbase-1.4/pom.xml b/flink-connectors/flink-connector-hbase-1.4/pom.xml
-index 66ffec07c68..47ce20e193e 100644
+index 77cd9dfc..7528142c 100644
 --- a/flink-connectors/flink-connector-hbase-1.4/pom.xml
 +++ b/flink-connectors/flink-connector-hbase-1.4/pom.xml
 @@ -255,7 +255,7 @@ under the License.
@@ -173,7 +167,7 @@ index 66ffec07c68..47ce20e193e 100644
  
  		<!--
 diff --git a/flink-connectors/flink-connector-hbase-2.2/pom.xml b/flink-connectors/flink-connector-hbase-2.2/pom.xml
-index da3cf3e3d42..99069286c03 100644
+index 9deea4b5..2073738a 100644
 --- a/flink-connectors/flink-connector-hbase-2.2/pom.xml
 +++ b/flink-connectors/flink-connector-hbase-2.2/pom.xml
 @@ -182,7 +182,7 @@ under the License.
@@ -186,7 +180,7 @@ index da3cf3e3d42..99069286c03 100644
  
  		<dependency>
 diff --git a/flink-connectors/flink-connector-hbase-base/pom.xml b/flink-connectors/flink-connector-hbase-base/pom.xml
-index 3e384e91a3b..716f1ffda28 100644
+index cb6f58a3..b8acaba5 100644
 --- a/flink-connectors/flink-connector-hbase-base/pom.xml
 +++ b/flink-connectors/flink-connector-hbase-base/pom.xml
 @@ -152,7 +152,7 @@ under the License.
@@ -199,7 +193,7 @@ index 3e384e91a3b..716f1ffda28 100644
  
  		<dependency>
 diff --git a/flink-connectors/flink-connector-hive/pom.xml b/flink-connectors/flink-connector-hive/pom.xml
-index 1b2880d02be..198772ca7bd 100644
+index ba7fd60e..9bf189ce 100644
 --- a/flink-connectors/flink-connector-hive/pom.xml
 +++ b/flink-connectors/flink-connector-hive/pom.xml
 @@ -1139,7 +1139,7 @@ under the License.
@@ -220,39 +214,8 @@ index 1b2880d02be..198772ca7bd 100644
  					<scope>provided</scope>
  				</dependency>
  
-diff --git a/flink-connectors/flink-connector-kinesis/src/main/resources/META-INF/NOTICE b/flink-connectors/flink-connector-kinesis/src/main/resources/META-INF/NOTICE
-index 1a652f4415f..21e1d299482 100644
---- a/flink-connectors/flink-connector-kinesis/src/main/resources/META-INF/NOTICE
-+++ b/flink-connectors/flink-connector-kinesis/src/main/resources/META-INF/NOTICE
-@@ -38,16 +38,16 @@ This project bundles the following dependencies under the Apache Software Licens
- - software.amazon.awssdk:netty-nio-client:2.16.86
- - software.amazon.awssdk:sts:2.16.86
- - software.amazon.awssdk:aws-query-protocol:2.16.86
--- io.netty:netty-codec-http:4.1.63.Final
--- io.netty:netty-codec-http2:4.1.63.Final
--- io.netty:netty-codec:4.1.63.Final
--- io.netty:netty-transport:4.1.63.Final
--- io.netty:netty-resolver:4.1.63.Final
--- io.netty:netty-common:4.1.63.Final
--- io.netty:netty-buffer:4.1.63.Final
--- io.netty:netty-handler:4.1.63.Final
--- io.netty:netty-transport-native-epoll:linux-x86_64:4.1.63.Final
--- io.netty:netty-transport-native-unix-common:4.1.63.Final
-+- io.netty:netty-codec-http:4.1.66.Final
-+- io.netty:netty-codec-http2:4.1.66.Final
-+- io.netty:netty-codec:4.1.66.Final
-+- io.netty:netty-transport:4.1.66.Final
-+- io.netty:netty-resolver:4.1.66.Final
-+- io.netty:netty-common:4.1.66.Final
-+- io.netty:netty-buffer:4.1.66.Final
-+- io.netty:netty-handler:4.1.66.Final
-+- io.netty:netty-transport-native-epoll:linux-x86_64:4.1.66.Final
-+- io.netty:netty-transport-native-unix-common:4.1.66.Final
- - com.typesafe.netty:netty-reactive-streams-http:2.0.5
- - com.typesafe.netty:netty-reactive-streams:2.0.5
- 
 diff --git a/flink-connectors/flink-sql-connector-hbase-1.4/src/main/resources/META-INF/NOTICE b/flink-connectors/flink-sql-connector-hbase-1.4/src/main/resources/META-INF/NOTICE
-index b6874e31592..8cd3c708a80 100644
+index b6874e31..8cd3c708 100644
 --- a/flink-connectors/flink-sql-connector-hbase-1.4/src/main/resources/META-INF/NOTICE
 +++ b/flink-connectors/flink-sql-connector-hbase-1.4/src/main/resources/META-INF/NOTICE
 @@ -10,7 +10,7 @@ This project bundles the following dependencies under the Apache Software Licens
@@ -265,7 +228,7 @@ index b6874e31592..8cd3c708a80 100644
  - org.apache.hbase:hbase-common:1.4.3
  - org.apache.hbase:hbase-protocol:1.4.3
 diff --git a/flink-connectors/flink-sql-connector-hbase-2.2/src/main/resources/META-INF/NOTICE b/flink-connectors/flink-sql-connector-hbase-2.2/src/main/resources/META-INF/NOTICE
-index 1e1948490b8..ebdf3a6255c 100644
+index 1e194849..ebdf3a62 100644
 --- a/flink-connectors/flink-sql-connector-hbase-2.2/src/main/resources/META-INF/NOTICE
 +++ b/flink-connectors/flink-sql-connector-hbase-2.2/src/main/resources/META-INF/NOTICE
 @@ -7,7 +7,7 @@ The Apache Software Foundation (http://www.apache.org/).
@@ -277,34 +240,8 @@ index 1e1948490b8..ebdf3a6255c 100644
   - io.dropwizard.metrics:metrics-core:3.2.6
   - org.apache.commons:commons-crypto:1.0.0
   - org.apache.commons:commons-lang3:3.3.2
-diff --git a/flink-end-to-end-tests/flink-glue-schema-registry-test/pom.xml b/flink-end-to-end-tests/flink-glue-schema-registry-test/pom.xml
-index 8fe8e0cdae0..da512c544cb 100644
---- a/flink-end-to-end-tests/flink-glue-schema-registry-test/pom.xml
-+++ b/flink-end-to-end-tests/flink-glue-schema-registry-test/pom.xml
-@@ -36,7 +36,7 @@ under the License.
- 		<aws.sdk.version>1.12.7</aws.sdk.version>
- 		<aws.sdkv2.version>2.16.86</aws.sdkv2.version>
- 		<reactivestreams.version>1.0.2</reactivestreams.version>
--		<netty.version>4.1.63.Final</netty.version>
-+		<netty.version>4.1.66.Final</netty.version>
- 		<guava.version>29.0-jre</guava.version>
- 	</properties>
- 
-diff --git a/flink-formats/flink-avro-glue-schema-registry/pom.xml b/flink-formats/flink-avro-glue-schema-registry/pom.xml
-index bf5c928ca11..3fcbb45481a 100644
---- a/flink-formats/flink-avro-glue-schema-registry/pom.xml
-+++ b/flink-formats/flink-avro-glue-schema-registry/pom.xml
-@@ -36,7 +36,7 @@ under the License.
- 		<glue.schema.registry.version>1.0.1</glue.schema.registry.version>
- 		<aws.sdkv2.version>2.16.86</aws.sdkv2.version>
- 		<reactivestreams.version>1.0.2</reactivestreams.version>
--		<netty.version>4.1.63.Final</netty.version>
-+		<netty.version>4.1.66.Final</netty.version>
- 	</properties>
- 
- 	<!-- ============================= -->
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
-index 6250435685d..c28d0d750f2 100644
+index 62504356..c28d0d75 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/configuration/KubernetesConfigOptions.java
 @@ -23,6 +23,7 @@ import org.apache.flink.annotation.docs.Documentation;
@@ -351,7 +288,7 @@ index 6250435685d..c28d0d750f2 100644
              key("kubernetes.container.image.pull-policy")
                      .enumType(ImagePullPolicy.class)
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitJobManagerDecorator.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitJobManagerDecorator.java
-index 5b3d8967e9e..91204ef7928 100644
+index 5b3d8967..91204ef7 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitJobManagerDecorator.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitJobManagerDecorator.java
 @@ -129,6 +129,8 @@ public class InitJobManagerDecorator extends AbstractKubernetesStepDecorator {
@@ -364,7 +301,7 @@ index 5b3d8967e9e..91204ef7928 100644
                          kubernetesJobManagerParameters.getJobManagerCPU(),
                          Collections.emptyMap(),
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitTaskManagerDecorator.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitTaskManagerDecorator.java
-index 69668de868f..5db8447625e 100644
+index 69668de8..5db84476 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitTaskManagerDecorator.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/decorators/InitTaskManagerDecorator.java
 @@ -113,6 +113,8 @@ public class InitTaskManagerDecorator extends AbstractKubernetesStepDecorator {
@@ -377,7 +314,7 @@ index 69668de868f..5db8447625e 100644
                          kubernetesTaskManagerParameters.getTaskManagerCPU(),
                          kubernetesTaskManagerParameters.getTaskManagerExternalResources(),
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
-index 67079734256..2ebb9010362 100644
+index 67079734..c4d1a9b4 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesJobManagerParameters.java
 @@ -125,6 +125,19 @@ public class KubernetesJobManagerParameters extends AbstractKubernetesParameters
@@ -386,8 +323,8 @@ index 67079734256..2ebb9010362 100644
  
 +    public double getJobManagerRequestCPU() {
 +        double dis = 1e-6;
-+        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU)
-+                - 1.0d) < dis) {
++        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU) - 1.0d)
++                < dis) {
 +            return this.getJobManagerCPU();
 +        }
 +        return flinkConfig.getDouble(KubernetesConfigOptions.JOB_MANAGER_REQUEST_CPU);
@@ -401,7 +338,7 @@ index 67079734256..2ebb9010362 100644
          return flinkConfig.getInteger(RestOptions.PORT);
      }
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
-index 247860e6c04..5b2f02e1d35 100644
+index 247860e6..9255988e 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/kubeclient/parameters/KubernetesTaskManagerParameters.java
 @@ -127,6 +127,19 @@ public class KubernetesTaskManagerParameters extends AbstractKubernetesParameter
@@ -414,8 +351,8 @@ index 247860e6c04..5b2f02e1d35 100644
 +
 +    public double getTaskManagerRequestCPU() {
 +        double dis = 1e-6;
-+        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU)
-+                - 1.0d) < dis) {
++        if (Math.abs(flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU) - 1.0d)
++                < dis) {
 +            return this.getTaskManagerCPU();
 +        }
 +        return flinkConfig.getDouble(KubernetesConfigOptions.TASK_MANAGER_REQUEST_CPU);
@@ -425,7 +362,7 @@ index 247860e6c04..5b2f02e1d35 100644
          return containeredTaskManagerParameters.getTaskExecutorProcessSpec().getExtendedResources();
      }
 diff --git a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/utils/KubernetesUtils.java b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/utils/KubernetesUtils.java
-index c6ba72b092b..cc4857d7c52 100644
+index c6ba72b0..1dacf699 100644
 --- a/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/utils/KubernetesUtils.java
 +++ b/flink-kubernetes/src/main/java/org/apache/flink/kubernetes/utils/KubernetesUtils.java
 @@ -328,17 +328,22 @@ public class KubernetesUtils {
@@ -458,12 +395,12 @@ index c6ba72b092b..cc4857d7c52 100644
                                  String.valueOf(externalResource.getValue().getValue().longValue()));
                  resourceRequirementsBuilder
 -                        .addToRequests(configKey, resourceQuantity)
-+                        //.addToRequests(configKey, resourceQuantity)
++                        // .addToRequests(configKey, resourceQuantity)
                          .addToLimits(configKey, resourceQuantity);
                  LOG.info(
                          "Request external resource {} with config key {}.",
 diff --git a/flink-python/pom.xml b/flink-python/pom.xml
-index d1ec64d9212..0f9e24999df 100644
+index f5341c3c..93931fc3 100644
 --- a/flink-python/pom.xml
 +++ b/flink-python/pom.xml
 @@ -152,14 +152,14 @@ under the License.
@@ -484,12 +421,12 @@ index d1ec64d9212..0f9e24999df 100644
  
  		<!-- test dependencies -->
 diff --git a/flink-python/src/main/resources/META-INF/NOTICE b/flink-python/src/main/resources/META-INF/NOTICE
-index 03be97ea868..eb4e85dbd8d 100644
+index 3ce69254..8612ff6e 100644
 --- a/flink-python/src/main/resources/META-INF/NOTICE
 +++ b/flink-python/src/main/resources/META-INF/NOTICE
 @@ -10,8 +10,8 @@ This project bundles the following dependencies under the Apache Software Licens
- - com.fasterxml.jackson.core:jackson-core:2.12.1
- - com.fasterxml.jackson.core:jackson-databind:2.12.1
+ - com.fasterxml.jackson.core:jackson-core:2.13.2
+ - com.fasterxml.jackson.core:jackson-databind:2.13.2.2
  - com.google.flatbuffers:flatbuffers-java:1.9.0
 -- io.netty:netty-buffer:4.1.46.Final
 -- io.netty:netty-common:4.1.46.Final
@@ -499,10 +436,10 @@ index 03be97ea868..eb4e85dbd8d 100644
  - org.apache.arrow:arrow-format:0.16.0
  - org.apache.arrow:arrow-memory:0.16.0
 diff --git a/pom.xml b/pom.xml
-index 63ac08e8d2d..fa37b31be46 100644
+index d8151ae4..ebf10a83 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -306,7 +306,7 @@ under the License.
+@@ -319,7 +319,7 @@ under the License.
  			<dependency>
  				<groupId>org.apache.flink</groupId>
  				<artifactId>flink-shaded-netty</artifactId>
